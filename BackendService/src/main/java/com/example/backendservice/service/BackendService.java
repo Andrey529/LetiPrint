@@ -18,7 +18,7 @@ public class BackendService {
 
 
     public ResponseEntity<?> getFileFromLocalDirectory(String envResponse, String filename) {
-        File file = new File(envResponse + "\\" + filename);
+        File file = new File(envResponse + "/" + filename);
         InputStreamResource i;
         try {
             i = new InputStreamResource(new FileInputStream(file)); //response if file was founded
@@ -28,7 +28,7 @@ public class BackendService {
                     .body(i);
         } catch (FileNotFoundException e) { //response if file wasn't founded
             return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                    "Product with filename " + filename + " not found"),
+                    "File with filename " + filename + " not found"),
                     HttpStatus.NOT_FOUND);
         }
 

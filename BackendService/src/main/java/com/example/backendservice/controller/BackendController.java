@@ -20,7 +20,7 @@ public class BackendController {
     // command: //java -jar target/BackendService-0.0.1-SNAPSHOT.jar --path=C:\Users\khama\Desktop\LetiPrint\BackendService\src\main\resources\storage
     @GetMapping("/downloadFile/{filename}")
     private ResponseEntity<?> getFile(@PathVariable String filename) {
-        String envResponse = env.getProperty("path");
+        String envResponse = System.getenv("pathFile");
         return backendService.getFileFromLocalDirectory(envResponse, filename);
     }
 
