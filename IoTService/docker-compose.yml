@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  IoTService:
+    container_name: IoTService
+    image: iot_service
+    build: .
+    devices:
+      - /dev/bus/usb/001/002:/dev/bus/usb/001/002
+    ports:
+      - "632:631"
+    restart: unless-stopped
