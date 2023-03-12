@@ -32,14 +32,13 @@ WORKDIR /app/build
 RUN cmake .. && \
     cmake --build .
 
-#RUN /usr/sbin/cupsd -f
-#    lpadmin -p HP_LaserJet_1018 -E -v hp:/usb/HP_LaserJet_1018?serial=KP0FGR2  \
-#      -m foo2zjs:0/ppd/foo2zjs/HP-LaserJet_1018.ppd
-#    /usr/bin/cupsd -f
-
 EXPOSE 631
 
 ENTRYPOINT ["/usr/sbin/cupsd", "-f"]
+#CMD ["lpadmin", "-p", "HP_LaserJet_1018", "-E", "-v", "hp:/usb/HP_LaserJet_1018?serial=KP0FGR2", "-m", "foo2zjs:0/ppd/foo2zjs/HP-LaserJet_1018.ppd", "&&", "./IoTService"]
+
+
+
 #ENTRYPOINT ["./IoTService"]
 
 

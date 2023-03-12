@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
     if(curl) {
         std::string response;
-        std::string url("example.com");
+        std::string url("httpbin.org/image/jpeg");
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
         std::cout << res << std::endl;
         std::cout << response << std::endl;
 
-        std::string fileName("test.txt");
+        std::string fileName("test.jpeg");
         std::ofstream outfile ("/app/build/" + fileName);
         outfile << response;
         outfile.close();
