@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  usb_mapper:
+    container_name: usb_mapper
+    image: usb_mapper
+    build: .
+    devices:
+      - /dev/bus/usb/001/002:/dev/bus/usb/001/002
+    ports:
+      - "632:631"
+    restart: unless-stopped

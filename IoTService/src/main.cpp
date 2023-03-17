@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
     if(curl) {
         std::string response;
-        std::string url("https://example.com");
+        std::string url("httpbin.org/image/jpeg");
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -26,9 +26,14 @@ int main(int argc, char **argv) {
         std::cout << res << std::endl;
         std::cout << response << std::endl;
 
-//        std::ofstream outfile ("/home/andrey/Projects/LetiPrint/IoTService/test.pdf");
-//        outfile << response;
-//        outfile.close();
+        std::string fileName("test.jpeg");
+        std::ofstream outfile ("/app/build/" + fileName);
+        outfile << response;
+        outfile.close();
+
+        std::string printerName("HP_LaserJet_1018");
+        std::string command = "lp -d " + printerName + " /app/build/" + fileName;
+        std::system(command.c_str());
     }
 }
 
