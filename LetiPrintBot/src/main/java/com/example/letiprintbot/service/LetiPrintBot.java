@@ -35,7 +35,7 @@ public class LetiPrintBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
 
             switch (messageText) {
-                case "/start" -> startCommandReceived(chatId,update.getMessage().getChat().getUserName());
+                case "/start" -> startCommandReceived(chatId);
             }
 
 
@@ -43,9 +43,12 @@ public class LetiPrintBot extends TelegramLongPollingBot {
 
         }
 
-    private void startCommandReceived(long chatId, String name) {
+    private void startCommandReceived(long chatId) {
 
-        String answer = "Hi, " + name;
+        String answer = "LetiPrint - бот сервиса автономной печати.\n\nОтправьте файл, который хотите распечатать\n" +
+                "Далее вам будет отправлен четырехзначный код, который нужно ввести на станции печати\n\n" +
+                "После ввода кода, нажмите #,чтобы подтвердить ввод, чтобы удалить введенный код нажмите *";
+
 
         sendMessage(chatId, answer);
     }
