@@ -7,6 +7,6 @@ find_library(WIRINGPI_LIB wiringPi)
 
 include_directories(/usr/include/wiringPi)
 
-add_executable(EmbeddedService main.cpp)
+add_executable(EmbeddedService src/main.cpp)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} ${WIRINGPI_LIB})
