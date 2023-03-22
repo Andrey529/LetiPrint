@@ -1,0 +1,10 @@
+version: "3.5"
+
+services:
+  EmbeddedService:
+    container_name: EmbeddedService
+    image: embedded_service
+    build: .
+    devices:
+      - /dev/gpiomem:/dev/gpiomem
+    restart: unless-stopped
