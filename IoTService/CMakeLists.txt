@@ -9,6 +9,9 @@ if (CURL_FOUND)
     add_definitions(-DHAVE_CURL)
 endif()
 
+find_library(WIRINGPI_LIB wiringPi)
+include_directories(/usr/include/wiringPi)
+
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} ${CURL_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${CURL_LIBRARIES} ${WIRINGPI_LIB})

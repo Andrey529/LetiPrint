@@ -19,7 +19,14 @@ RUN apt-get update && \
         hpijs-ppds \
         hp-ppd  \
         hplip \
-        printer-driver-foo2zjs
+        printer-driver-foo2zjs \
+        sudo \
+        git-core && \
+    git clone https://github.com/WiringPi/WiringPi.git && \
+    cd WiringPi && \
+    git pull origin && \
+    ./build && \
+    gpio -v
 
 COPY cups_server/cupsd.conf /etc/cups/cupsd.conf
 
@@ -35,6 +42,7 @@ RUN cmake .. && \
 EXPOSE 631
 
 ENTRYPOINT ["/usr/sbin/cupsd", "-f"]
+#ENTRYPOINT ["./IoTService"]
 #CMD ["lpadmin", "-p", "HP_LaserJet_1018", "-E", "-v", "hp:/usb/HP_LaserJet_1018?serial=KP0FGR2", "-m", "foo2zjs:0/ppd/foo2zjs/HP-LaserJet_1018.ppd", "&&", "./IoTService"]
 
 

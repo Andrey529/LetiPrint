@@ -6,7 +6,8 @@ services:
     image: iot_service
     build: .
     devices:
-      - /dev/bus/usb/001/006:/dev/bus/usb/001/006
+      - /dev/bus/usb/001/005:/dev/bus/usb/001/005
+      - /dev/gpiomem:/dev/gpiomem
     ports:
       - "632:631"
     restart: unless-stopped
