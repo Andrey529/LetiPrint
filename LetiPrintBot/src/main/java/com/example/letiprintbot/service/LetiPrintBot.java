@@ -46,7 +46,7 @@ public class LetiPrintBot extends TelegramLongPollingBot {
         if (update.hasCallbackQuery()) {
             String callData = update.getCallbackQuery().getData();
             if (!Objects.equals(callData, "noConfirm")) {
-                String printCode = httpController.sendMetadata(getBotToken(), callData, filename);
+                String printCode = httpController.sendMetadata(getBotToken(), callData, filename,update.getCallbackQuery().getFrom().getId().toString());
                 String answer = "Файл успешно отправлен на принтер. Для печати введите код " + printCode + "\n" + "Не забудьте нажать # для подтверждение ввода кода";
                 sendMessage(update.getCallbackQuery().getFrom().getId(), answer);
             } else
