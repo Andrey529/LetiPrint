@@ -1,11 +1,14 @@
 package com.example.letiprintbot.httpClient;
 
+import com.example.letiprintbot.metaData.MetaData;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -39,15 +42,40 @@ public class HttpController {
         return "404";
     }
 
-    private String makeDownloadLink(String filePath, long chatId, String botToken) {
+    public String sendMetadata(String botToken, String filePath, String filename) throws IOException {
+        MetaData metaData = new MetaData();
+        URL obj = new URL("http://localhost:8010/metaData");
+        JSONObject jObj = metaData.makeJson(botToken,filePath,filename);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setDoOutput(true);
+        OutputStream os = con.getOutputStream();
+        byte[] out = jObj.toString().getBytes();
+        os.write(out);
+        os.flush();
+        os.close();
 
-        String downloadLink = "https://api.telegram.org/file/bot" + botToken + "/" + filePath.substring(1, filePath.length() - 1);
-        System.out.println(downloadLink);
-        return downloadLink;
+        int responseCode = con.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+
+            StringBuilder response = null;
+
+            while ((inputLine = in.readLine()) != null) {
+                if (response != null)
+                    response.append(inputLine);
+                else
+                    response = new StringBuilder(inputLine);
+            }
+            in.close();
+
+            assert response != null;
+            return response.toString();
+        }
+        else
+            return "Ошибка";
     }
-
-    public void sendDownloadLink(String filePath, long chatId, String botToken) {
-        makeDownloadLink(filePath, chatId, botToken);
-    }
-
 }

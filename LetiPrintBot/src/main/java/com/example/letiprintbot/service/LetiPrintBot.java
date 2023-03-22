@@ -8,8 +8,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -18,6 +22,8 @@ public class LetiPrintBot extends TelegramLongPollingBot {
     final BotConfig config;
 
     HttpController httpController = new HttpController();
+
+    String filename = null;
 
     public LetiPrintBot(BotConfig config) {
         this.config = config;
@@ -37,27 +43,38 @@ public class LetiPrintBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        if (update.hasCallbackQuery()) {
+            String callData = update.getCallbackQuery().getData();
+            if (!Objects.equals(callData, "noConfirm")) {
+                String printCode = httpController.sendMetadata(getBotToken(), callData, filename);
+                String answer = "Файл успешно отправлен на принтер. Для печати введите код " + printCode + "\n" + "Не забудьте нажать # для подтверждение ввода кода";
+                sendMessage(update.getCallbackQuery().getFrom().getId(), answer);
+            } else
+                sendMessage(update.getCallbackQuery().getFrom().getId(), "Отправка файла отменена");
+        }
+
         if (update.hasMessage() && update.getMessage().hasDocument()) {
             Document fileReferences = update.getMessage().getDocument();
             String fileId = fileReferences.getFileId();
             String filePath = httpController.getFilePath(getBotToken(), fileId);
-            if (!Objects.equals(filePath, "404"))
-                httpController.sendDownloadLink(filePath, update.getMessage().getChatId(), getBotToken());
-            else
-                sendMessage(update.getMessage().getChatId(), "К сожалению, отправить файл не удалось. Повторите попытку позже");
-            if (update.hasMessage() && update.getMessage().hasText()) {
+            filename = fileReferences.getFileName();
 
-                long chatId = update.getMessage().getChatId();
-                String messageText = update.getMessage().getText();
-
-                switch (messageText) {
-                    case "/start" -> startCommandReceived(chatId);
-                }
-
-
-            }
+            sendFileConfirm(update.getMessage().getChatId(), filePath);
 
         }
+
+        if (update.hasMessage() && update.getMessage().hasText()) {
+
+            long chatId = update.getMessage().getChatId();
+            String messageText = update.getMessage().getText();
+
+            switch (messageText) {
+                case "/start" -> startCommandReceived(chatId);
+            }
+
+
+        }
+
     }
 
     private void startCommandReceived(long chatId) {
@@ -86,5 +103,27 @@ public class LetiPrintBot extends TelegramLongPollingBot {
         }
 
     }
+
+    private void sendFileConfirm(long chatId, String filePath) throws TelegramApiException {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton yesButton = new InlineKeyboardButton();
+        InlineKeyboardButton noButton = new InlineKeyboardButton();
+        yesButton.setText("Да");
+        noButton.setText("Нет");
+        yesButton.setCallbackData(filePath);
+        noButton.setCallbackData("noConfirm");
+        List<InlineKeyboardButton> inlineKeyboardButtonList = new ArrayList<>();
+        inlineKeyboardButtonList.add(yesButton);
+        inlineKeyboardButtonList.add(noButton);
+        List<List<InlineKeyboardButton>> keyBoardButtons = new ArrayList<>();
+        keyBoardButtons.add(inlineKeyboardButtonList);
+        inlineKeyboardMarkup.setKeyboard(keyBoardButtons);
+        message.setText("Вы действительно хотите распечатать этот файл?");
+        message.setReplyMarkup(inlineKeyboardMarkup);
+        execute(message);
+    }
+
 }
 
