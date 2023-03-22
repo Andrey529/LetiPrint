@@ -16,6 +16,16 @@ import java.io.FileNotFoundException;
 public class BackendService {
 
 
+    public String teamIdGenerator() {
+        int firstNumber = (int) Math.round(Math.random() * 9);
+        int secondNumber = (int) Math.round(Math.random() * 9);
+        int thirdNumber = (int) Math.round(Math.random() * 9);
+        int fourthNumber = (int) Math.round(Math.random() * 9);
+        return firstNumber + Integer.toString(secondNumber)
+                + thirdNumber + fourthNumber;
+    }
+
+
 
     public ResponseEntity<?> getFileFromLocalDirectory(String envResponse, String filename) {
         File file = new File(envResponse + "/" + filename);

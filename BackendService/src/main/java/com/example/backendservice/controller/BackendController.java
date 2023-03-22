@@ -4,9 +4,8 @@ import com.example.backendservice.service.BackendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -22,6 +21,11 @@ public class BackendController {
     private ResponseEntity<?> getFile(@PathVariable String filename) {
         String envResponse = System.getenv("pathFile");
         return backendService.getFileFromLocalDirectory(envResponse, filename);
+    }
+
+    @PostMapping("/metaData")
+    public String getUsersId(@RequestBody String metaData) {
+        return backendService.teamIdGenerator();
     }
 
 }
