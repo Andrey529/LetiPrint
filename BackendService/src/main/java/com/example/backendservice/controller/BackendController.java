@@ -1,31 +1,49 @@
 package com.example.backendservice.controller;
 
+import com.example.backendservice.models.MetaData;
+import com.example.backendservice.repositories.MetaDataRepository;
+import com.example.backendservice.serelization.JsonSerelizator;
 import com.example.backendservice.service.BackendService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 public class BackendController {
 
-    BackendService backendService = new BackendService();
+    private final BackendService backendService;
 
-    @Autowired
-    Environment env; //get path to file directory from command line
+    private final MetaDataRepository metaDataRepository;
 
-    // command: //java -jar target/BackendService-0.0.1-SNAPSHOT.jar --path=C:\Users\khama\Desktop\LetiPrint\BackendService\src\main\resources\storage
-    @GetMapping("/downloadFile/{filename}")
-    private ResponseEntity<?> getFile(@PathVariable String filename) {
-        String envResponse = System.getenv("pathFile");
-        return backendService.getFileFromLocalDirectory(envResponse, filename);
+    private final JsonSerelizator jsonSerelizator = new JsonSerelizator();
+
+
+    @GetMapping("/downloadFile")
+    @ResponseBody
+    private ResponseEntity<?> getFile(@RequestParam String fileId) {
+        try {
+            MetaData metaData = metaDataRepository.getMetaDataByFileId(fileId);
+            return new ResponseEntity<>(jsonSerelizator.serializeJsonForIoTService(metaData), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @PostMapping("/metaData")
     public String getUsersId(@RequestBody String metaData) {
-        return backendService.teamIdGenerator();
+        String fileId = backendService.teamIdGenerator(metaDataRepository.getFileIds());
+        metaDataRepository.save(jsonSerelizator.deserializeMetaDates(metaData,fileId));
+        return fileId;
     }
 
 }
