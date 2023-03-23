@@ -7,11 +7,17 @@ find_package(CURL)
 if (CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
-endif()
+endif ()
 
 find_library(WIRINGPI_LIB wiringPi)
 include_directories(/usr/include/wiringPi)
 
-add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/include/json/include)
+
+add_executable(${CMAKE_PROJECT_NAME} src/main.cpp
+        src/GPIOController/GPIOController.h src/GPIOController/GPIOController.cpp
+        src/PrinterController/PrinterController.cpp src/PrinterController/PrinterController.h
+        src/FileDownloader/FileDownloader.cpp src/FileDownloader/FileDownloader.h
+        src/IoTService/IoTService.cpp src/IoTService/IoTService.h)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} ${CURL_LIBRARIES} ${WIRINGPI_LIB})
