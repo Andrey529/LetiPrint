@@ -1,6 +1,6 @@
 #include "GPIOController.h"
 
-void GPIOController::Run() {
+void GPIOController::Run(std::function<int (std::string)> handler) {
     setup();
     std::string numbers;
     numbers.push_back('@');
@@ -19,14 +19,15 @@ void GPIOController::Run() {
             } else if (numbers.back() != '@') {
                 numbers.push_back('@');
             }
-            if (numbers.back() == '#') {
+            if (numbers.back() == '#' && numbers.size() == 5) {
                 std::cout << "entered code is : ";
                 numbers.pop_back();
-                if ((numbers[0] == '1') and (numbers[1] == '2') and (numbers[2] == '3') and (numbers[3] == '4')) {
-                    digitalWrite(26, HIGH);
-                    delay(500);
-                    digitalWrite(26, LOW);
-//                    printFile();
+
+                int result = handler(numbers);
+                if (result == 0) {
+                    std::cout << "Vse zaebis" << std::endl;
+                } else if (result == -1) {
+                    std::cout << "Gabella" << std::endl;
                 }
                 for (char number: numbers)
                     std::cout << number;
@@ -44,7 +45,6 @@ void GPIOController::Run() {
 
 void GPIOController::setup() {
     wiringPiSetupGpio();
-    pinMode(26, OUTPUT);
     for (int i = 0; i < rows_; i++) {
         pinMode(rowPins_[i], OUTPUT);
         digitalWrite(rowPins_[i], HIGH);

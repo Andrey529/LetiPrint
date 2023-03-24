@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <wiringPi.h>
+#include <functional>
 
 class GPIOController {
 public:
@@ -28,7 +29,7 @@ public:
             : rows_(rows), columns_(columns), rowPins_(std::move(rowPins)), columnPins_(std::move(columnPins)),
               keys_(std::move(keys)) {}
 
-    void Run();
+    void Run(std::function<int (std::string)> handler);
 
     void setup();
 

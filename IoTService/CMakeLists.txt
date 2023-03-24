@@ -18,6 +18,7 @@ add_executable(${CMAKE_PROJECT_NAME} src/main.cpp
         src/GPIOController/GPIOController.h src/GPIOController/GPIOController.cpp
         src/PrinterController/PrinterController.cpp src/PrinterController/PrinterController.h
         src/FileDownloader/FileDownloader.cpp src/FileDownloader/FileDownloader.h
-        src/IoTService/IoTService.cpp src/IoTService/IoTService.h)
+        src/IoTService/IoTService.cpp src/IoTService/IoTService.h
+        src/FileDownloader/FileDownloaderExceptions.h)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} ${CURL_LIBRARIES} ${WIRINGPI_LIB})

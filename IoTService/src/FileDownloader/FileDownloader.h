@@ -3,10 +3,12 @@
 
 #include <string>
 #include <iostream>
-#include <curl/curl.h>
 #include <fstream>
 
+#include <curl/curl.h>
 #include "nlohmann/json.hpp"
+
+#include "FileDownloaderExceptions.h"
 
 class FileDownloader {
 private:
@@ -14,6 +16,10 @@ private:
     std::string directoryToSaveTheFile_;
     std::string linkToCheckFileId_;
     std::string fileId_;
+    std::string userId_;
+    std::string linkToDownloadFile_;
+    std::string fileName_;
+    std::string fileType_;
 public:
     FileDownloader();
 
@@ -24,6 +30,13 @@ public:
     void downloadFile(const std::string &directoryToSaveTheFile, const std::string &linkToCheckFileId,
                       const std::string &fileId);
 
+    [[nodiscard]] const std::string& getDirectoryToSaveTheFile() const;
+    [[nodiscard]] const std::string& getLinkToCheckFileId() const;
+    [[nodiscard]] const std::string& getFileId() const;
+    [[nodiscard]] const std::string& getUserId() const;
+    [[nodiscard]] const std::string& getLinkToDownloadFile() const;
+    [[nodiscard]] const std::string& getFileName() const;
+    [[nodiscard]] const std::string& getFileType() const;
 };
 
 #endif //IOTSERVICE_FILEDOWNLOADER_H

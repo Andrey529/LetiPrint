@@ -1,21 +1,19 @@
 #include "PrinterController.h"
 
-void PrinterController::Print(const std::string &fileDirectory, const std::string &fileName) {
+void PrinterController::Print(const std::string &fileDirectory, const std::string &fileName, const std::string &fileType) {
     fileName_ = fileName;
     fileDirectory_ = fileDirectory;
+    fileType_ = fileType;
 
-    if (fileName_.empty() && fileDirectory_.empty()) {
-        std::cout << "file name and file directory for printing file is empty." << std::endl;
-        return;
-    }
-    else if (fileName_.empty()) {
-        std::cout << "file name for printing file is empty." << std::endl;
-        return;
-    } else if (fileDirectory_.empty()) {
-        std::cout << "file directory for printing file is empty." << std::endl;
-        return;
+    if (fileName_.empty() || fileDirectory_.empty() || fileType_.empty()) {
+        throw std::invalid_argument("file name, file directory and file type for printing file should not be empty.");
     }
 
-    std::string command = "lp -d " + printerName_ + " " + fileDirectory_ + "/" + fileName_;
+    std::cout << "Печатается файл\n"
+                 "В дериктории: " << fileDirectory_ << '\n' <<
+                 "C названием: " << fileName_ << '\n' <<
+                 "C типом файла: " << fileType_ << std::endl;
+
+    std::string command = "lp -d " + printerName_ + " " + fileDirectory_ + fileName_ + '.' + fileType_;
     std::system(command.c_str());
 }
