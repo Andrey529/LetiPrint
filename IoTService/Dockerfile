@@ -30,6 +30,7 @@ RUN apt-get update && \
 
 COPY cups_server/cupsd.conf /etc/cups/cupsd.conf
 
+ADD ./include /app/include
 ADD ./src /app/src
 ADD ./CMakeLists.txt /app
 
