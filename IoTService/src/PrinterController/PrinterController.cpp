@@ -14,6 +14,10 @@ void PrinterController::Print(const std::string &fileDirectory, const std::strin
                  "C названием: " << fileName_ << '\n' <<
                  "C типом файла: " << fileType_ << std::endl;
 
+    if (fileType_ == "docx" || fileType_ == "doc") {
+        fileType_ = "pdf";
+    }
+
     std::string command = "lp -d " + printerName_ + " " + fileDirectory_ + fileName_ + '.' + fileType_;
     std::system(command.c_str());
 }

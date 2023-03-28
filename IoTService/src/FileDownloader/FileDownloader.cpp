@@ -67,9 +67,16 @@ void FileDownloader::downloadFile(const std::string &directoryToSaveTheFile, con
                 result = curl_easy_perform(curl);
                 curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
                 if (http_code == 200 && result != CURLE_ABORTED_BY_CALLBACK) {
-                    std::ofstream outFile(directoryToSaveTheFile_ + fileName_ + "." + fileType_);
+                    std::ofstream outFile(directoryToSaveTheFile_ + fileName_ + '.' + fileType_);
                     outFile << response;
                     outFile.close();
+                    if (fileType_ == "docx" || fileType_ == "doc") {
+                        std::string command;
+                        command = "libreoffice --headless --convert-to pdf " + directoryToSaveTheFile_ +
+                                fileName_ + '.' + fileType_ + " --outdir .";
+                        std::cout << command << std::endl;
+                        std::system(command.c_str());
+                    }
                 } else {
                     std::cout << "Bad request to download file with fileId = " << fileId_ << std::endl;
                     throw BadRequest("Bad request to download file.");

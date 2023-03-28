@@ -21,6 +21,7 @@ RUN apt-get update && \
         hplip \
         printer-driver-foo2zjs \
         sudo \
+        libreoffice \
         git-core && \
     git clone https://github.com/WiringPi/WiringPi.git && \
     cd WiringPi && \
