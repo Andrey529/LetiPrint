@@ -7,11 +7,12 @@ public class MetaData {
     String downloadLink;
     String filename;
     String fileType;
-
-    public JSONObject makeJson(String botToken, String filePath, String filename){
+    String userId;
+    public JSONObject makeJson(String botToken, String filePath, String filename, String userId){
         addDownloadLink(botToken,filePath);
         addFilename(filename);
         addFileType(filename);
+        addUserId(userId);
         Gson gson = new Gson();
         String json = gson.toJson(this);
         JSONObject jObj = new JSONObject(json);
@@ -31,6 +32,10 @@ public class MetaData {
     public void addFileType(String filePath){
         int extensionIndex = filePath.lastIndexOf(".");
         this.fileType = filePath.substring(extensionIndex + 1);
+    }
+
+    public void addUserId(String userId){
+        this.userId = userId;
     }
 
 }
