@@ -34,9 +34,9 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
                 std::cout << std::endl;
                 numbers.clear();
 
-                lcdConnector.lcdLoc(LINE1);
+                lcdConnector.lcdLoc(lcdConnector.line1);
                 lcdConnector.typeln("Privet");
-                lcdConnector.lcdLoc(LINE2);
+                lcdConnector.lcdLoc(lcdConnector.line2);
                 lcdConnector.typeln("Sho ti golova");
                 delay(2500);
                 lcdConnector.ClrLcd();
