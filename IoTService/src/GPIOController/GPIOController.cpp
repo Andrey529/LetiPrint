@@ -33,6 +33,13 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
                     std::cout << number;
                 std::cout << std::endl;
                 numbers.clear();
+
+                lcdConnector.lcdLoc(LINE1);
+                lcdConnector.typeln("Privet");
+                lcdConnector.lcdLoc(LINE2);
+                lcdConnector.typeln("Sho ti golova");
+                delay(2500);
+                lcdConnector.ClrLcd();
             }
         } else {
             std::cout << "count of number is exceeded";
@@ -53,6 +60,8 @@ void GPIOController::setup() {
         pinMode(columnPins_[i], INPUT);
         pullUpDnControl(columnPins_[i], PUD_UP);
     }
+    lcdConnector.fd = wiringPiI2CSetup(I2CAddress);
+    lcdConnector.lcd_init();
 }
 
 char GPIOController::readKeypad() {
