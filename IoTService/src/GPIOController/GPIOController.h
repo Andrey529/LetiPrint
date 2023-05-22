@@ -11,8 +11,8 @@ class GPIOController {
 public:
     const int rows_ = 4;
     const int columns_ = 4;
-    const std::vector<int> rowPins_ = {13, 19, 11, 17}; // {2, 3, 11, 17}
-    const std::vector<int> columnPins_ = {27, 22, 10, 9};
+    const std::vector<int> rowPins_ = {6, 13, 19, 26};
+    const std::vector<int> columnPins_ = {22, 27, 17, 4};
     const std::vector<std::vector<char>> keys_ = {{'1', '2', '3', 'A'},
                                                   {'4', '5', '6', 'B'},
                                                   {'7', '8', '9', 'C'},
