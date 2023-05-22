@@ -13,12 +13,15 @@ find_library(WIRINGPI_LIB wiringPi)
 include_directories(/usr/include/wiringPi)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/json/include)
+include_directories(${PROJECT_SOURCE_DIR}/include/lcdConnector)
 
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp
         src/GPIOController/GPIOController.h src/GPIOController/GPIOController.cpp
         src/PrinterController/PrinterController.cpp src/PrinterController/PrinterController.h
         src/FileDownloader/FileDownloader.cpp src/FileDownloader/FileDownloader.h
         src/IoTService/IoTService.cpp src/IoTService/IoTService.h
-        src/FileDownloader/FileDownloaderExceptions.h)
+        src/FileDownloader/FileDownloaderExceptions.h
+        src/LcdConnector/LcdConnector.cpp src/LcdConnector/LcdConnector.h)
+
 
 target_link_libraries(${CMAKE_PROJECT_NAME} ${CURL_LIBRARIES} ${WIRINGPI_LIB})

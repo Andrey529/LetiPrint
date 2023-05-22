@@ -5,6 +5,10 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
     std::string numbers;
     numbers.push_back('@');
     while (true) {
+	for (int i = 0; i < numbers.size(); ++i) {
+		std::cout << numbers[i];
+	}
+	std::cout << std::endl;
         char key = readKeypad();
         if (numbers.size() <= 5) {
             if (key == '*') {
@@ -23,16 +27,30 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
                 std::cout << "entered code is : ";
                 numbers.pop_back();
 
+		std::string message("Code: ");
+		message += numbers;
+                lcdConnector.lcdLoc(lcdConnector.line1);
+                lcdConnector.typeln(message.c_str());
+                lcdConnector.lcdLoc(lcdConnector.line2);
+                lcdConnector.typeln("Sending file");
+
                 int result = handler(numbers);
                 if (result == 0) {
                     std::cout << "Vse zaebis" << std::endl;
-                } else if (result == -1) {
+		} else if (result == -1) {
                     std::cout << "Gabella" << std::endl;
                 }
                 for (char number: numbers)
                     std::cout << number;
                 std::cout << std::endl;
-                numbers.clear();
+
+		numbers.clear();
+                lcdConnector.ClrLcd();
+		
+		lcdConnector.lcdLoc(lcdConnector.line1);
+                lcdConnector.typeln("Printing");
+                delay(2500);
+		lcdConnector.ClrLcd();
             }
         } else {
             std::cout << "count of number is exceeded";
@@ -53,6 +71,8 @@ void GPIOController::setup() {
         pinMode(columnPins_[i], INPUT);
         pullUpDnControl(columnPins_[i], PUD_UP);
     }
+    lcdConnector.fd = wiringPiI2CSetup(I2CAddress);
+    lcdConnector.lcd_init();
 }
 
 char GPIOController::readKeypad() {
