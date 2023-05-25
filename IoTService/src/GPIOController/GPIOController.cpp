@@ -4,31 +4,57 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
     setup();
     std::string numbers;
     numbers.push_back('@');
+
+    lcdConnector.ClrLcd();
+    std::string message = "Enter your code:";
+    lcdConnector.lcdLoc(lcdConnector.line1);
+    lcdConnector.typeln(message.c_str());
+
+
     while (true) {
-	for (int i = 0; i < numbers.size(); ++i) {
-		std::cout << numbers[i];
-	}
-	std::cout << std::endl;
         char key = readKeypad();
         if (numbers.size() <= 5) {
             if (key == '*') {
                 std::cout << "your code has been erased" << std::endl;
                 numbers.clear();
+
+                lcdConnector.ClrLcd();
+                message = "Code erased";
+                lcdConnector.lcdLoc(lcdConnector.line1);
+                lcdConnector.typeln(message.c_str());
+                delay(1000);
+                continue;
             }
             if (key != '@') {
                 if (numbers.back() == '@') {
                     numbers.pop_back();
                     numbers.push_back(key);
+
+                    lcdConnector.ClrLcd();
+                    message = "Enter your code:";
+                    lcdConnector.lcdLoc(lcdConnector.line1);
+                    lcdConnector.typeln(message.c_str());
+                    lcdConnector.lcdLoc(lcdConnector.line2);
+                    lcdConnector.typeln(numbers.substr(0, numbers.size() - 1).c_str());
                 }
             } else if (numbers.back() != '@') {
                 numbers.push_back('@');
+
+                lcdConnector.ClrLcd();
+                message = "Enter your code:";
+                lcdConnector.lcdLoc(lcdConnector.line1);
+                lcdConnector.typeln(message.c_str());
+                lcdConnector.lcdLoc(lcdConnector.line2);
+                lcdConnector.typeln(numbers.substr(0, numbers.size() - 1).c_str());
             }
             if (numbers.back() == '#' && numbers.size() == 5) {
                 std::cout << "entered code is : ";
                 numbers.pop_back();
 
-		std::string message("Code: ");
-		message += numbers;
+		        message = "Code: ";
+		        message += numbers;
+
+                lcdConnector.ClrLcd();
                 lcdConnector.lcdLoc(lcdConnector.line1);
                 lcdConnector.typeln(message.c_str());
                 lcdConnector.lcdLoc(lcdConnector.line2);
@@ -36,26 +62,43 @@ void GPIOController::Run(std::function<int (std::string)> handler) {
 
                 int result = handler(numbers);
                 if (result == 0) {
-                    std::cout << "Vse zaebis" << std::endl;
-		} else if (result == -1) {
-                    std::cout << "Gabella" << std::endl;
+                    std::cout << "Successful printing" << std::endl;
+                    lcdConnector.ClrLcd();
+                    lcdConnector.lcdLoc(lcdConnector.line1);
+                    lcdConnector.typeln("Printing");
+                    delay(5000);
+                    lcdConnector.ClrLcd();
+		        } else if (result == -1) {
+                    std::cout << "Error. Something wrong." << std::endl;
+                    lcdConnector.ClrLcd();
+
+                    lcdConnector.lcdLoc(lcdConnector.line1);
+                    lcdConnector.typeln("Incorrect code");
+                    delay(2500);
+                    lcdConnector.ClrLcd();
                 }
                 for (char number: numbers)
                     std::cout << number;
                 std::cout << std::endl;
 
-		numbers.clear();
-                lcdConnector.ClrLcd();
-		
-		lcdConnector.lcdLoc(lcdConnector.line1);
-                lcdConnector.typeln("Printing");
-                delay(2500);
-		lcdConnector.ClrLcd();
+        		numbers.clear();
+
             }
         } else {
             std::cout << "count of number is exceeded";
             numbers.clear();
             numbers.push_back('@');
+
+            lcdConnector.ClrLcd();
+            message = "Nums is exceeded";
+            lcdConnector.lcdLoc(lcdConnector.line1);
+            lcdConnector.typeln(message.c_str());
+            delay(2500);
+            lcdConnector.ClrLcd();
+            message = "Enter your code:";
+            lcdConnector.lcdLoc(lcdConnector.line1);
+            lcdConnector.typeln(message.c_str());
+
         }
         delay(50);
     }
