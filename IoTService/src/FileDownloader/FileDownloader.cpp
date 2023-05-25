@@ -55,6 +55,18 @@ void FileDownloader::downloadFile(const std::string &directoryToSaveTheFile, con
                 fileName_ = json.at("fileName").get<std::string>();
                 fileName_ = fileName_.substr(1, fileName_.size() - 2);
 
+
+                std::string fileNameWithoutSpaces;
+                for (const auto &elem : fileName_) {
+                    if (elem == ' ') {
+                        fileNameWithoutSpaces += '_';
+                    } else {
+                        fileNameWithoutSpaces += elem;
+                    }
+                }
+
+                fileName_ = fileNameWithoutSpaces;
+
                 std::cout << "userId: " << userId_ << '\n'
                           << "linkToDownloadFile: " << linkToDownloadFile_ << '\n'
                           << "fileName: " << fileName_ << '\n'
