@@ -1,0 +1,19 @@
+version: "3.5"
+
+networks:
+  default:
+    driver: bridge
+
+
+services:
+  LetiPrintBot:
+    container_name: LetiPrintBot
+    image: leti_print_bot:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    environment:
+      TOKEN: ${TOKEN}
+      BACKEND_IP: ${BACKEND_IP}
