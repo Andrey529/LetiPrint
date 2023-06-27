@@ -46,4 +46,10 @@ public class BackendController {
         return fileId;
     }
 
+    @GetMapping("/health")
+    public String healthCheck() {
+        String status = "200";
+	return status;
+    }
+
 }

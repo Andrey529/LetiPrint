@@ -42,9 +42,9 @@ public class HttpController {
         return "404";
     }
 
-    public String sendMetadata(String botToken, String filePath, String filename,String chatId) throws IOException {
+    public String sendMetadata(String backendIp, String botToken, String filePath, String filename,String chatId) throws IOException {
         MetaData metaData = new MetaData();
-        URL obj = new URL("http://localhost:8010/metaData");
+        URL obj = new URL(backendIp + "/metaData");
         JSONObject jObj = metaData.makeJson(botToken,filePath,filename,chatId);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
