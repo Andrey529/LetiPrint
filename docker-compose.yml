@@ -44,10 +44,12 @@ services:
     ports:
       - "${PGADMIN_PORT}:80"
     restart: unless-stopped
+    depends_on:
+      - postgres
 
   BackendService:
     container_name: BackendService
-    image: backend_service
+    image: backend_service:latest
     build:
       context: ./BackendService
       dockerfile: ./Dockerfile
@@ -62,3 +64,17 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on: 
       - postgres
+
+  LetiPrintBot:
+    container_name: LetiPrintBot
+    image: leti_print_bot:latest
+    build:
+      context: ./LetiPrintBot
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    environment:
+      TOKEN: ${TOKEN}
+      BACKEND_IP: ${BACKEND_IP}
+    depends_on:
+      - BackendService
