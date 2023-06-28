@@ -1,4 +1,5 @@
 package com.example.backendservice.models;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -29,7 +30,13 @@ public class MetaData {
     @Column(name = "file_name")
     private String fileName;
 
-
-
-
+    @Override
+    public String toString() {
+        return
+                "fileId=" + fileId +
+                ", userId='" + userId + '\'' +
+                ", fileLink='" + fileLink + '\'' +
+                ", fileType='" + fileType + '\'' +
+                ", fileName='" + fileName + '\'' ;
+    }
 }
