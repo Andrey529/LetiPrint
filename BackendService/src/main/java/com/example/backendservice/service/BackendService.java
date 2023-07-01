@@ -1,29 +1,17 @@
 package com.example.backendservice.service;
 
 
-import com.example.backendservice.AppError;
-import com.example.backendservice.models.MetaData;
 import com.example.backendservice.repositories.MetaDataRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
+
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class BackendService {
-
-    private final MetaDataRepository metaDataRepository;
 
 
     public String teamIdGenerator(List<Short> listOfFileId) {
