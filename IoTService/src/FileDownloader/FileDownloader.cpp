@@ -47,13 +47,9 @@ void FileDownloader::downloadFile(const std::string &directoryToSaveTheFile, con
 
                 // parse json fields and remove quotation marks
                 userId_ = json.at("userId").get<std::string>();
-                userId_ = userId_.substr(1, userId_.size() - 2);
                 linkToDownloadFile_ = json.at("fileLink").get<std::string>();
-                linkToDownloadFile_ = linkToDownloadFile_.substr(1, linkToDownloadFile_.size() - 2);
                 fileType_ = json.at("fileType").get<std::string>();
-                fileType_ = fileType_.substr(1, fileType_.size() - 2);
                 fileName_ = json.at("fileName").get<std::string>();
-                fileName_ = fileName_.substr(1, fileName_.size() - 2);
 
 
                 std::string fileNameWithoutSpaces;

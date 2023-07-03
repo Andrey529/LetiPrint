@@ -3,8 +3,14 @@ version: "3.5"
 services:
   IoTService:
     container_name: IoTService
-    image: iot_service
+    image: iot_service:latest
     build: .
+    env_file:
+      - .env
+    environment:
+      PRINTER_NAME: ${PRINTER_NAME}
+      DOWNLOAD_DIRECTORY: ${DOWNLOAD_DIRECTORY}
+      DOWNLOAD_LINK: ${DOWNLOAD_LINK}
     devices:
       - /dev/bus/usb:/dev/bus/usb
       - /dev/gpiomem:/dev/gpiomem
