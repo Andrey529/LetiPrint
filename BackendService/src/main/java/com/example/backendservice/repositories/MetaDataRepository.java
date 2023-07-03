@@ -11,7 +11,6 @@ public interface MetaDataRepository extends JpaRepository<MetaData, String> {
     @Query("SELECT fileId FROM MetaData")
     List<Short> getFileIds();
 
-
     MetaData getMetaDataByFileId(String fileId);
 
 

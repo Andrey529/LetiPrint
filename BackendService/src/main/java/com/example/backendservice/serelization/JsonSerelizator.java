@@ -24,7 +24,7 @@ public class JsonSerelizator {
     }
 
     public String serializeJsonForIoTService(MetaData metaData){
-        String json = null;
+        String json;
         Gson gson = new Gson();
         MetaData metaData1 = new MetaData();
         metaData1.setFileId(metaData.getFileId());
@@ -35,6 +35,7 @@ public class JsonSerelizator {
         json = gson.toJson(metaData1);
         return json;
     }
+
 
 
 }
