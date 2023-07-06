@@ -1,5 +1,6 @@
 package com.example.letiprintbot.service;
 
+import com.example.letiprintbot.LetiPrintBotLogger;
 import com.example.letiprintbot.config.BotConfig;
 import com.example.letiprintbot.httpClient.HttpController;
 import lombok.SneakyThrows;
@@ -49,13 +50,17 @@ public class LetiPrintBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         if (update.hasCallbackQuery()) {
+
             String callData = update.getCallbackQuery().getData();
             if (!Objects.equals(callData, "noConfirm")) {
                 String printCode = httpController.sendMetadata(getBotBackendIp(), getBotToken(), callData, filename,update.getCallbackQuery().getFrom().getId().toString());
                 String answer = "Файл успешно отправлен на принтер. Для печати введите код " + printCode + "\n" + "Не забудьте нажать # для подтверждение ввода кода";
                 sendMessage(update.getCallbackQuery().getFrom().getId(), answer);
-            } else
+                LetiPrintBotLogger.loggingAcceptedDoc(update.getCallbackQuery().getFrom().getUserName(),printCode);
+            } else {
                 sendMessage(update.getCallbackQuery().getFrom().getId(), "Отправка файла отменена");
+                LetiPrintBotLogger.loggingCancelledDoc(update.getCallbackQuery().getFrom().getUserName(),filename);
+            }
         }
 
         if (update.hasMessage() && update.getMessage().hasDocument()) {
@@ -63,7 +68,7 @@ public class LetiPrintBot extends TelegramLongPollingBot {
             String fileId = fileReferences.getFileId();
             String filePath = httpController.getFilePath(getBotToken(), fileId);
             filename = fileReferences.getFileName();
-
+            LetiPrintBotLogger.loggingReceivedDoc(update.getMessage().getChat().getUserName(),filename);
             sendFileConfirm(update.getMessage().getChatId(), filePath);
 
         }
