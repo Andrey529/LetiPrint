@@ -2,7 +2,6 @@ package com.example.backendservice.controller;
 
 import com.example.backendservice.BackendLogger;
 import com.example.backendservice.models.MetaData;
-import com.example.backendservice.repositories.MetaDataRepository;
 import com.example.backendservice.serelization.JsonSerelizator;
 import com.example.backendservice.service.BackendService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ public class BackendController {
 
     private final BackendService backendService;
 
-    private final MetaDataRepository metaDataRepository;
-
     private final JsonSerelizator jsonSerelizator = new JsonSerelizator();
 
 
@@ -31,7 +28,7 @@ public class BackendController {
         Map<String,String> mapOfRequestParam = new HashMap<>();
         mapOfRequestParam.put("fileId",fileId);
         try {
-            MetaData metaData = metaDataRepository.getMetaDataByFileId(fileId);
+            MetaData metaData = backendService.getMetaDataByFileId(fileId);
             BackendLogger.loggingHttpRequest("Get", "/downloadFile", metaData.toString(), mapOfRequestParam);
             return new ResponseEntity<>(jsonSerelizator.serializeJsonForIoTService(metaData), HttpStatus.OK);
         }
@@ -44,12 +41,11 @@ public class BackendController {
 
     @PostMapping("/metaData")
     public String getUsersId(@RequestBody String metaData) {
-        String fileId = backendService.teamIdGenerator(metaDataRepository.getFileIds());
+        String fileId = backendService.teamIdGenerator(backendService.getFileIds());
         BackendLogger.loggingHttpRequest("Post", "/metaData", metaData,null);
         BackendLogger.loggingIdGenerator(fileId);
-        metaDataRepository.save(jsonSerelizator.deserializeMetaDates(metaData,fileId));
+        backendService.save(jsonSerelizator.deserializeMetaDates(metaData,fileId));
         return fileId;
     }
-
 
 }

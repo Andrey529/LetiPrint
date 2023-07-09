@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "files")
 @Data
@@ -29,6 +31,10 @@ public class MetaData {
 
     @Column(name = "file_name")
     private String fileName;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
 
     @Override
     public String toString() {

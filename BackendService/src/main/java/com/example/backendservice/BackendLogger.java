@@ -14,6 +14,10 @@ public abstract class BackendLogger {
         logger.info("New generated id for this session:" + generatedId);
     }
 
+    public static void loggingDeleteOldRecordsFromDb(int countOfLines){
+        logger.info("Deleted " + countOfLines + " lines from database");
+    }
+
     public static void loggingHttpRequest(String methodType, String target, String body, Map<String,String> requestParameters){
         logger.info("New request:");
         logger.info("    method:" + methodType);
