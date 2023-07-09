@@ -43,14 +43,7 @@ RUN cmake .. && \
 
 EXPOSE 631
 
-ENTRYPOINT ["/usr/sbin/cupsd", "-f"]
-#ENTRYPOINT ["./IoTService"]
-#CMD ["lpadmin", "-p", "HP_LaserJet_1018", "-E", "-v", "hp:/usb/HP_LaserJet_1018?serial=KP0FGR2", "-m", "foo2zjs:0/ppd/foo2zjs/HP-LaserJet_1018.ppd", "&&", "./IoTService"]
-
-
-
-#ENTRYPOINT ["./IoTService"]
-
+ENTRYPOINT ["/bin/sh", "-c", "/usr/sbin/cupsd -F & ./IoTService ${PRINTER_NAME} ${DOWNLOAD_DIRECTORY} ${DOWNLOAD_LINK}"]
 
 ## Run stage
 #FROM ubuntu:20.04
