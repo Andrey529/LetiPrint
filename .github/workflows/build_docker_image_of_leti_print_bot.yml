@@ -1,0 +1,31 @@
+name: build_docker_image_of_leti_print_bot
+
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+    push:
+      paths:
+        - 'LetiPrintBot/**'
+
+jobs:  
+    build_docker_image:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+            
+            - name: Build Docker image
+              run: |
+                docker buildx create --use
+                docker buildx build \
+                  --file ./LetiPrintBot/Dockerfile \
+                  --tag leti-print-bot:latest \
+                  --load \
+                  ./LetiPrintBot
+            
+            - name: List Docker images
+              run: docker images

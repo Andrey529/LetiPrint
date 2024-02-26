@@ -1,0 +1,53 @@
+name: build_and_test_leti_print_bot
+
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+    push:
+      paths:
+        - 'LetiPrintBot/**'
+
+jobs:
+    build_project:
+        runs-on: ubuntu-latest
+        env:
+            TOKEN: ${{ secrets.TOKEN }}
+            BACKEND_IP: ${{ secrets.BACKEND_IP }}
+        strategy:
+            matrix:
+              distribution: [ 'zulu', 'temurin', 'corretto' ]
+              java: [ '17' ]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Setup Java ${{ matrix.java }} (${{ matrix.distribution }})
+              uses: actions/setup-java@v4
+              with:
+                distribution: ${{ matrix.distribution }}
+                java-version: ${{ matrix.java }}
+            
+            - name: Set TOKEN and BACKEND_IP environment variable
+              run: |
+                echo "TOKEN=${TOKEN}" >> $GITHUB_ENV
+                echo "BACKEND_IP=${BACKEND_IP}" >> $GITHUB_ENV 
+
+            - name: Set pom.xml path
+              run: echo "POM_PATH=./LetiPrintBot/pom.xml" >> $GITHUB_ENV
+
+            - name: Validate project
+              run: mvn validate --file $POM_PATH
+
+            - name: Compile project
+              run: mvn compile --file $POM_PATH
+
+            - name: Run tests in project
+              run: mvn test --file $POM_PATH
+
+            - name: Package project
+              run: mvn -DskipTests package --file $POM_PATH
+            
+            - name: Verify package
+              run: mvn -DskipTests verify --file $POM_PATH
