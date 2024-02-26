@@ -1,0 +1,31 @@
+name: build_docker_image_of_backend_service
+
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+    push:
+      paths:
+        - 'BackendService/**'
+
+jobs:  
+    build_docker_image:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+            
+            - name: Build Docker image
+              run: |
+                docker buildx create --use
+                docker buildx build \
+                  --file ./BackendService/Dockerfile \
+                  --tag backend-service:latest \
+                  --load \
+                  ./BackendService
+            
+            - name: List Docker images
+              run: docker images

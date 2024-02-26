@@ -1,0 +1,50 @@
+name: build_and_test_backend_service
+
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+    push:
+      paths:
+        - 'BackendService/**'
+
+jobs:
+    build_project:
+        runs-on: ubuntu-latest
+        env:
+          SERVER_PORT: 8080
+        strategy:
+            matrix:
+              distribution: [ 'zulu', 'temurin', 'corretto' ]
+              java: [ '17' ]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Setup Java ${{ matrix.java }} (${{ matrix.distribution }})
+              uses: actions/setup-java@v4
+              with:
+                distribution: ${{ matrix.distribution }}
+                java-version: ${{ matrix.java }}
+            
+            - name: Set SERVER_PORT environment variable
+              run: echo "SERVER_PORT=${SERVER_PORT}" >> $GITHUB_ENV 
+
+            - name: Set pom.xml path
+              run: echo "POM_PATH=./BackendService/pom.xml" >> $GITHUB_ENV
+
+            - name: Validate project
+              run: mvn validate --file $POM_PATH
+
+            - name: Compile project
+              run: mvn compile --file $POM_PATH
+
+            - name: Run tests in project
+              run: mvn test --file $POM_PATH
+
+            - name: Package project
+              run: mvn -DskipTests package --file $POM_PATH
+            
+            - name: Verify package
+              run: mvn -DskipTests verify --file $POM_PATH
